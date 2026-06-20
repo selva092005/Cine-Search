@@ -1,0 +1,315 @@
+:root {
+  --primary-glow: radial-gradient(circle, rgba(255, 215, 0, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+  --accent-color: #ffd700;
+  /* Cinema Gold */
+  --accent-glow: 0 0 20px rgba(255, 215, 0, 0.45);
+  --glass-bg: rgba(26, 26, 38, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --transition-speed: 0.3s;
+}
+
+body {
+  background-color: #0c0c12;
+   background-image:
+    radial-gradient(at 10% 20%, rgba(255, 215, 0, 0.03) 0px, transparent 50%),
+    radial-gradient(at 90% 80%, rgba(0, 229, 255, 0.02) 0px, transparent 50%);
+  background-attachment: fixed;
+  color: #f1f1f6;
+  min-height: 100vh;
+  overflow-x: hidden;
+  letter-spacing: -0.01em;
+}
+
+/* Glassmorphism containers */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  transition: all var(--transition-speed) ease-in-out;
+}
+
+.glass-panel:hover {
+  border-color: rgba(255, 215, 0, 0.15);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5), 0 0 30px rgba(255, 215, 0, 0.03);
+}
+
+/* Custom premium input styling */
+.custom-input {
+  background: rgba(10, 10, 15, 0.6);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  color: #fff;
+  padding: 12px 18px;
+  font-size: 1rem;
+  transition: all var(--transition-speed) ease;
+}
+
+.custom-input:focus {
+  background: rgba(10, 10, 15, 0.85);
+  border-color: var(--accent-color);
+  box-shadow: var(--accent-glow);
+  outline: none;
+  color: #fff;
+}
+
+/* Premium buttons */
+.btn-gold {
+  background: linear-gradient(135deg, #ffd700 0%, #cca300 100%);
+  color: #0c0c12;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 24px;
+  transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+}
+
+.btn-gold:hover {
+  background: linear-gradient(135deg, #ffe033 0%, #e6b800 100%);
+  color: #0c0c12;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.35), var(--accent-glow);
+}
+
+.btn-gold:active {
+  transform: translateY(0);
+}
+
+/* Glass Outline Button */
+.btn-glass-outline {
+  background: rgba(255, 255, 255, 0.03);
+  color: #f1f1f6;
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  padding: 12px 24px;
+  font-weight: 500;
+  transition: all var(--transition-speed) ease;
+}
+
+.btn-glass-outline:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+/* Movie Card styling */
+.movie-card {
+  overflow: hidden;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all var(--transition-speed) cubic-bezier(0.165, 0.84, 0.44, 1);
+  cursor: pointer;
+  position: relative;
+}
+
+.movie-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  border-color: rgba(255, 215, 0, 0.35);
+  background: rgba(255, 215, 0, 0.04);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 215, 0, 0.1);
+}
+
+.movie-card .poster-container {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 2/3;
+  background: #14141d;
+}
+
+.movie-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-speed) ease;
+}
+
+.movie-card:hover img {
+  transform: scale(1.05);
+}
+
+.movie-card .card-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to top, rgba(12, 12, 18, 0.95) 15%, rgba(12, 12, 18, 0.4) 60%, transparent 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 16px;
+}
+
+/* Badge Styling */
+.badge-gold {
+  background: rgba(255, 215, 0, 0.15);
+  color: var(--accent-color);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  font-weight: 600;
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 50px;
+}
+
+.badge-rating {
+  background: #ffc107;
+  color: #000;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+/* Search suggestions or history items */
+.history-pill {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  color: #bbb;
+  font-size: 0.85rem;
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all var(--transition-speed) ease;
+}
+
+.history-pill:hover {
+  background: rgba(255, 215, 0, 0.1);
+  color: var(--accent-color);
+  border-color: rgba(255, 215, 0, 0.3);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0c0c12;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-color);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+
+/* Movie Detail Spec list */
+.spec-item {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 10px 0;
+}
+
+.spec-item:last-child {
+  border-bottom: none;
+}
+
+.spec-label {
+  color: #8c8c9a;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.spec-value {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+/* Netflix Style Hero Banner */
+.hero-banner {
+  position: relative;
+  min-height: 420px;
+  max-height: 500px;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 40px;
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  background-size: cover;
+  background-position: center;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    linear-gradient(to right, rgba(12, 12, 18, 0.95) 25%, rgba(12, 12, 18, 0.65) 55%, rgba(12, 12, 18, 0.1) 100%),
+    linear-gradient(to top, rgba(12, 12, 18, 0.95) 5%, rgba(12, 12, 18, 0) 50%);
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 30px 40px;
+  max-width: 680px;
+}
+
+.hero-title {
+  font-size: 2.8rem;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -1px;
+}
+
+.hero-tagline {
+  font-size: 1.1rem;
+  color: var(--accent-color);
+  font-weight: 500;
+}
+
+.hero-overview {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #bbb;
+}
+
+@media (max-width: 768px) {
+  .hero-banner {
+    min-height: 380px;
+    align-items: flex-end;
+  }
+
+  .hero-overlay {
+    background: linear-gradient(to top, rgba(12, 12, 18, 0.95) 60%, rgba(12, 12, 18, 0.4) 100%);
+  }
+
+  .hero-content {
+    padding: 20px;
+  }
+
+  .hero-title {
+    font-size: 1.9rem;
+  }
+}
