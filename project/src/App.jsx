@@ -82,9 +82,10 @@ function App() {
         {/* Navigation & Header */}
         <header className="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3 mb-5 pb-3 border-bottom border-secondary border-opacity-10 animate-fade-in">
           <Link to="/" className="d-flex align-items-center gap-2 text-decoration-none">
-            <i className="bi bi-film text-warning" style={{ fontSize: '2rem' }}></i>
-            <h2 className="fw-black mb-0 text-white" style={{ letterSpacing: '-1px' }}>
-              CINE<span className="text-warning">SEARCH</span>
+            <i className="bi bi-film text-warning" style={{ fontSize: '2.2rem', filter: 'drop-shadow(0 0 8px rgba(255, 215, 0, 0.4))' }}></i>
+            <h2 className="mb-0 brand-title-container">
+              <span className="brand-title">CINE</span>
+              <span className="brand-accent">SEARCH</span>
             </h2>
           </Link>
 
@@ -107,7 +108,7 @@ function App() {
             >
               <i className="bi bi-bookmarks-fill me-2"></i> Watchlist
               {watchlist.length > 0 && (
-                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-count">
                   {watchlist.length}
                 </span>
               )}

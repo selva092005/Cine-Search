@@ -18,7 +18,8 @@ const MovieDetails = ({ movie, onClose, isWatchlisted, onToggleWatchlist }) => {
     spoken_languages,
     credits,
     status,
-    poster_path
+    poster_path,
+    backdrop_path
   } = movie;
 
   const [trailerKey, setTrailerKey] = useState(null);
@@ -67,104 +68,126 @@ const MovieDetails = ({ movie, onClose, isWatchlisted, onToggleWatchlist }) => {
   const countries = production_countries ? production_countries.map(c => c.name).join(', ') : 'N/A';
   const languages = spoken_languages ? spoken_languages.map(l => l.english_name).join(', ') : 'N/A';
 
+  const backdropUrl = backdrop_path 
+    ? `https://image.tmdb.org/t/p/original${backdrop_path}` 
+    : '';
+
   return (
-    <div className="glass-panel p-4 p-md-5 animate-fade-in my-4 position-relative">
-      
-      {/* Back & Action Buttons Header */}
-      <div className="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
-        <button className="btn btn-glass-outline btn-sm d-inline-flex align-items-center gap-2" onClick={onClose}>
-          <i className="bi bi-arrow-left"></i> Back
-        </button>
-        
-        <div className="d-flex gap-2">
-          {trailerKey && (
-            <button 
-              className="btn btn-danger btn-sm d-inline-flex align-items-center gap-2 px-3"
-              onClick={() => setShowTrailer(true)}
-            >
-              <i className="bi bi-play-btn-fill"></i> Watch Trailer
-            </button>
-          )}
-          
-          <button 
-            className={`btn btn-sm d-inline-flex align-items-center gap-2 px-3 ${isWatchlisted ? 'btn-warning text-dark border-0' : 'btn-gold'}`}
-            onClick={() => onToggleWatchlist(movie)}
-          >
-            <i className={`bi ${isWatchlisted ? 'bi-bookmark-dash-fill' : 'bi-bookmark-plus-fill'}`}></i>
-            {isWatchlisted ? 'Remove Watchlist' : 'Add Watchlist'}
+    <div 
+      className="glass-panel details-panel-premium p-4 p-md-5 animate-fade-in my-4 position-relative"
+      style={backdropUrl ? { backgroundImage: `url(${backdropUrl})` } : {}}
+    >
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        {/* Back & Action Buttons Header */}
+        <div className="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+          <button className="btn btn-glass-outline btn-sm d-inline-flex align-items-center gap-2" onClick={onClose}>
+            <i className="bi bi-arrow-left"></i> Back
           </button>
-        </div>
-      </div>
-
-      {/* Main Details Panel */}
-      <div className="row g-4 g-lg-5 align-items-start">
-        {/* Poster */}
-        <div className="col-12 col-md-4 text-center">
-          <div className="position-relative d-inline-block">
-            <img 
-              src={posterUrl} 
-              alt={title} 
-              className="img-fluid rounded-4 shadow-lg border border-secondary"
-              style={{ maxHeight: '480px', objectFit: 'cover', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }} 
-            />
-            {vote_average !== undefined && vote_average > 0 && (
-              <span className="badge-rating position-absolute top-3 start-3 d-flex align-items-center gap-1 shadow">
-                <i className="bi bi-star-fill text-dark"></i> {vote_average.toFixed(1)}
-              </span>
+          
+          <div className="d-flex gap-2">
+            {trailerKey && (
+              <button 
+                className="btn btn-danger-gradient btn-sm d-inline-flex align-items-center gap-2 px-3"
+                onClick={() => setShowTrailer(true)}
+              >
+                <i className="bi bi-play-btn-fill"></i> Watch Trailer
+              </button>
             )}
+            
+            <button 
+              className={`btn btn-sm d-inline-flex align-items-center gap-2 px-3 ${isWatchlisted ? 'btn-watchlist-remove' : 'btn-gold'}`}
+              onClick={() => onToggleWatchlist(movie)}
+            >
+              <i className={`bi ${isWatchlisted ? 'bi-bookmark-dash-fill' : 'bi-bookmark-plus-fill'}`}></i>
+              {isWatchlisted ? 'Remove Watchlist' : 'Add Watchlist'}
+            </button>
           </div>
         </div>
 
-        {/* Text Details */}
-        <div className="col-12 col-md-8">
-          <div className="d-flex flex-wrap gap-2 align-items-center mb-2">
-            <span className="badge bg-secondary text-capitalize px-3 py-2 rounded-pill">{status}</span>
-            <span className="badge bg-dark border border-secondary px-3 py-2 rounded-pill">{runtime ? `${runtime} min` : 'N/A'}</span>
+        {/* Main Details Panel */}
+        <div className="row g-4 g-lg-5 align-items-start">
+          {/* Poster */}
+          <div className="col-12 col-md-4 text-center">
+            <div className="position-relative d-inline-block">
+              <img 
+                src={posterUrl} 
+                alt={title} 
+                className="img-fluid rounded-4 shadow-lg border border-secondary"
+                style={{ maxHeight: '480px', objectFit: 'cover', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }} 
+              />
+              {vote_average !== undefined && vote_average > 0 && (
+                <span className="badge-rating position-absolute top-3 start-3 d-flex align-items-center gap-1 shadow">
+                  <i className="bi bi-star-fill text-dark"></i> {vote_average.toFixed(1)}
+                </span>
+              )}
+            </div>
           </div>
 
-          <h2 className="display-5 fw-extrabold text-white mb-1">{title}</h2>
-          {tagline && <p className="text-muted fst-italic fs-5 mb-2">"{tagline}"</p>}
-          <p className="text-warning fs-5 fw-bold mb-4">{release_date ? release_date.split('-')[0] : 'N/A'}</p>
-
-          <div className="d-flex flex-wrap gap-2 mb-4">
-            {genres && genres.map((genre, idx) => (
-              <span key={genre.id || idx} className="badge-gold">
-                {genre.name}
+          {/* Text Details */}
+          <div className="col-12 col-md-8">
+            <div className="d-flex flex-wrap gap-2 align-items-center mb-2">
+              <span className="pill-badge">{status}</span>
+              <span className="pill-badge">
+                <i className="bi bi-clock me-1 text-warning"></i> {runtime ? `${runtime} min` : 'N/A'}
               </span>
-            ))}
-          </div>
+            </div>
 
-          <div className="mb-4">
-            <h5 className="text-secondary fw-semibold mb-2">Overview</h5>
-            <p className="lead text-light-50 fs-6 lh-lg">{overview || 'No overview available.'}</p>
-          </div>
+            <h2 className="display-5 fw-extrabold text-white mb-1">{title}</h2>
+            {tagline && <p className="text-muted fst-italic fs-5 mb-2">"{tagline}"</p>}
+            <p className="text-warning fs-5 fw-bold mb-4">{release_date ? release_date.split('-')[0] : 'N/A'}</p>
 
-          <div className="row g-3 mt-2 border-top border-secondary pt-3">
-            <div className="col-12 col-sm-6 spec-item">
-              <div className="spec-label">Director</div>
-              <div className="spec-value text-white">{directors}</div>
+            <div className="d-flex flex-wrap gap-2 mb-4">
+              {genres && genres.map((genre, idx) => (
+                <span key={genre.id || idx} className="badge-gold">
+                  {genre.name}
+                </span>
+              ))}
             </div>
-            <div className="col-12 col-sm-6 spec-item">
-              <div className="spec-label">Writer</div>
-              <div className="spec-value text-white">{writers}</div>
+
+            <div className="mb-4">
+              <h5 className="text-secondary fw-semibold mb-2">Overview</h5>
+              <p className="lead text-light-50 fs-6 lh-lg" style={{ color: '#d0d0df' }}>{overview || 'No overview available.'}</p>
             </div>
-            <div className="col-12 col-sm-6 spec-item">
-              <div className="spec-label">Actors</div>
-              <div className="spec-value text-white">{actors}</div>
-            </div>
-            <div className="col-12 col-sm-6 spec-item">
-              <div className="spec-label">Released</div>
-              <div className="spec-value text-white">{release_date || 'N/A'}</div>
-            </div>
-            <div className="col-12 col-sm-6 spec-item">
-              <div className="spec-label">Budget / Revenue</div>
-              <div className="spec-value text-warning">
-                <i className="bi bi-cash-coin me-1"></i> {formattedBudget} / {formattedRevenue}
+
+            <div className="row g-3 mt-2 border-top border-secondary pt-3">
+              <div className="col-12 col-sm-6 spec-item">
+                <div className="spec-label d-flex align-items-center gap-2">
+                  <i className="bi bi-megaphone-fill text-warning"></i> Director
+                </div>
+                <div className="spec-value text-white">{directors}</div>
               </div>
-            </div>
-            <div className="col-12 col-sm-6 spec-item">
-              <div className="spec-label">Country & Language</div>
-              <div className="spec-value text-white">{countries} ({languages})</div>
+              <div className="col-12 col-sm-6 spec-item">
+                <div className="spec-label d-flex align-items-center gap-2">
+                  <i className="bi bi-pen-fill text-warning"></i> Writer
+                </div>
+                <div className="spec-value text-white">{writers}</div>
+              </div>
+              <div className="col-12 col-sm-6 spec-item">
+                <div className="spec-label d-flex align-items-center gap-2">
+                  <i className="bi bi-people-fill text-warning"></i> Actors
+                </div>
+                <div className="spec-value text-white">{actors}</div>
+              </div>
+              <div className="col-12 col-sm-6 spec-item">
+                <div className="spec-label d-flex align-items-center gap-2">
+                  <i className="bi bi-calendar-event-fill text-warning"></i> Released
+                </div>
+                <div className="spec-value text-white">{release_date || 'N/A'}</div>
+              </div>
+              <div className="col-12 col-sm-6 spec-item">
+                <div className="spec-label d-flex align-items-center gap-2">
+                  <i className="bi bi-cash-coin text-warning"></i> Budget / Revenue
+                </div>
+                <div className="spec-value text-warning">
+                  {formattedBudget} / {formattedRevenue}
+                </div>
+              </div>
+              <div className="col-12 col-sm-6 spec-item">
+                <div className="spec-label d-flex align-items-center gap-2">
+                  <i className="bi bi-globe text-warning"></i> Country & Language
+                </div>
+                <div className="spec-value text-white">{countries} ({languages})</div>
+              </div>
             </div>
           </div>
         </div>
@@ -208,7 +231,6 @@ const MovieDetails = ({ movie, onClose, isWatchlisted, onToggleWatchlist }) => {
           </div>
         </div>
       )}
-
     </div>
   );
 };

@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const MovieCard = ({ movie, isWatchlisted, onToggleWatchlist }) => {
-  const { title, release_date, poster_path, id } = movie;
+  const { title, release_date, poster_path, id, vote_average } = movie;
   const navigate = useNavigate();
 
   const year = release_date ? release_date.split('-')[0] : 'N/A';
@@ -22,10 +22,20 @@ const MovieCard = ({ movie, isWatchlisted, onToggleWatchlist }) => {
       <div className="poster-container">
         <img src={posterUrl} alt={title} loading="lazy" />
         
+        {/* Rating Badge at Top-Left */}
+        {vote_average !== undefined && vote_average > 0 && (
+          <span 
+            className="badge bg-warning text-dark position-absolute fw-bold d-flex align-items-center gap-1 shadow"
+            style={{ zIndex: 10, top: '10px', left: '10px', fontSize: '0.8rem', padding: '5px 8px', borderRadius: '8px' }}
+          >
+            <i className="bi bi-star-fill" style={{ fontSize: '0.75rem' }}></i> {vote_average.toFixed(1)}
+          </span>
+        )}
+
         {/* View Details button */}
         <button
-          className="btn position-absolute bg-dark bg-opacity-75 text-info rounded-circle p-0 border-0 d-flex align-items-center justify-content-center"
-          style={{ zIndex: 10, top: '10px', right: '54px', width: '38px', height: '38px' }}
+          className="card-action-btn"
+          style={{ right: '54px' }}
           onClick={(e) => {
             e.stopPropagation();
             handleCardClick();
@@ -33,13 +43,13 @@ const MovieCard = ({ movie, isWatchlisted, onToggleWatchlist }) => {
           title="View Movie Details"
           aria-label="View Movie Details"
         >
-          <i className="bi bi-eye-fill text-light" style={{ fontSize: '1.15rem' }}></i>
+          <i className="bi bi-eye-fill" style={{ fontSize: '1.1rem' }}></i>
         </button>
 
         {/* Watchlist Quick Toggle button */}
         <button
-          className="btn position-absolute bg-dark bg-opacity-75 text-warning rounded-circle p-0 border-0 d-flex align-items-center justify-content-center"
-          style={{ zIndex: 10, top: '10px', right: '10px', width: '38px', height: '38px' }}
+          className="card-action-btn"
+          style={{ right: '10px' }}
           onClick={(e) => {
             e.stopPropagation();
             onToggleWatchlist(movie);
@@ -47,7 +57,7 @@ const MovieCard = ({ movie, isWatchlisted, onToggleWatchlist }) => {
           title={isWatchlisted ? "Remove from Watchlist" : "Add to Watchlist"}
           aria-label={isWatchlisted ? "Remove from Watchlist" : "Add to Watchlist"}
         >
-          <i className={`bi ${isWatchlisted ? 'bi-bookmark-dash-fill text-warning' : 'bi-bookmark-plus text-light'}`} style={{ fontSize: '1.15rem' }}></i>
+          <i className={`bi ${isWatchlisted ? 'bi-bookmark-dash-fill text-warning' : 'bi-bookmark-plus text-light'}`} style={{ fontSize: '1.1rem' }}></i>
         </button>
 
         <div className="card-overlay">

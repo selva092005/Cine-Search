@@ -40,6 +40,7 @@ function Home({ watchlist, onToggleWatchlist }) {
   const [totalPages, setTotalPages] = useState(1);
 
   // Netflix-style Hero Banner states
+  const [heroIndex, setHeroIndex] = useState(0);
   const [heroMovie, setHeroMovie] = useState(null);
   const [heroTrailerKey, setHeroTrailerKey] = useState(null);
   const [showHeroTrailer, setShowHeroTrailer] = useState(false);
@@ -109,16 +110,8 @@ function Home({ watchlist, onToggleWatchlist }) {
 
           setMovies(results);
           setTotalPages(data.total_pages > 500 ? 500 : data.total_pages); // TMDb API max page limit is 500
-
-          // Fetch full Hero details for page 1 of Browse mode (using trending #1)
-          if (!activeSearch && page === 1 && results[0] && !selectedGenre) {
-            fetchHeroDetails(results[0].id);
-          } else {
-            setHeroMovie(null);
-          }
         } else {
           setMovies([]);
-          setHeroMovie(null);
           setError(activeSearch ? `No results found for "${activeSearch}"` : 'No movies match your filters.');
         }
       } catch (err) {
@@ -130,6 +123,55 @@ function Home({ watchlist, onToggleWatchlist }) {
     };
     fetchMovies();
   }, [activeSearch, selectedGenre, sortBy, page]);
+
+  // Reset heroIndex when page or search active state changes
+  useEffect(() => {
+    setHeroIndex(0);
+  }, [activeSearch, selectedGenre, sortBy, page]);
+
+  // Fetch full details and trailer keys for the currently featured Hero Movie
+  useEffect(() => {
+    const loadHeroMovie = async () => {
+      if (!activeSearch && page === 1 && !selectedGenre && movies.length > 0 && movies[heroIndex]) {
+        await fetchHeroDetails(movies[heroIndex].id);
+      } else {
+        setHeroMovie(null);
+      }
+    };
+    loadHeroMovie();
+  }, [movies, heroIndex, activeSearch, page, selectedGenre]);
+
+  const handleNextHero = () => {
+    if (movies.length > 0) {
+      const maxIndex = Math.min(movies.length, 5); // Limit carousel to Top 5 movies
+      setHeroIndex(prev => (prev + 1) % maxIndex);
+    }
+  };
+
+  const handlePrevHero = () => {
+    if (movies.length > 0) {
+      const maxIndex = Math.min(movies.length, 5); // Limit carousel to Top 5 movies
+      setHeroIndex(prev => (prev - 1 + maxIndex) % maxIndex);
+    }
+  };
+
+  // Autoplay slideshow every 7 seconds
+  useEffect(() => {
+    if (!heroMovie || activeSearch || page !== 1 || selectedGenre) return;
+    
+    const interval = setInterval(() => {
+      handleNextHero();
+    }, 7000);
+    
+    return () => clearInterval(interval);
+  }, [heroMovie, activeSearch, page, selectedGenre, movies]);
+
+  const isWatchlisted = (movieId) => watchlist.some(item => item.id === movieId);
+
+  // Determine grid movies list (slice off the currently featured movie from list if hero banner is showing)
+  const displayMovies = (heroMovie && !activeSearch && page === 1 && !selectedGenre) 
+    ? movies.filter(movie => movie.id !== heroMovie.id) 
+    : movies;
 
   // Trigger search on submit
   const handleSearchSubmit = (e) => {
@@ -161,13 +203,6 @@ function Home({ watchlist, onToggleWatchlist }) {
     setPage(1);
   };
 
-  const isWatchlisted = (movieId) => watchlist.some(item => item.id === movieId);
-
-  // Determine grid movies list (slice off trending #1 from list if hero banner is showing)
-  const displayMovies = (heroMovie && !activeSearch && page === 1 && !selectedGenre) 
-    ? movies.slice(1) 
-    : movies;
-
   return (
     <div>
       {/* Netflix-Style Hero Banner (Only page 1 of Browse) */}
@@ -181,7 +216,7 @@ function Home({ watchlist, onToggleWatchlist }) {
           <div className="hero-overlay"></div>
           <div className="hero-content text-start">
             <div className="d-flex align-items-center gap-2 mb-2">
-              <span className="badge bg-warning text-dark fw-bold px-2 py-1 rounded">FEATURED #1</span>
+              <span className="badge bg-warning text-dark fw-bold px-2 py-1 rounded">FEATURED #{heroIndex + 1}</span>
               {heroMovie.vote_average > 0 && (
                 <span className="badge bg-dark border border-secondary text-light fw-bold px-2 py-1 rounded d-flex align-items-center gap-1">
                   <i className="bi bi-star-fill text-warning"></i> {heroMovie.vote_average.toFixed(1)}
@@ -218,6 +253,45 @@ function Home({ watchlist, onToggleWatchlist }) {
               </button>
             </div>
           </div>
+
+          {/* Carousel Navigation Arrows */}
+          <button 
+            type="button"
+            className="hero-arrow-btn hero-arrow-left"
+            onClick={(e) => {
+              e.stopPropagation();
+              handlePrevHero();
+            }}
+            aria-label="Previous Featured Movie"
+          >
+            <i className="bi bi-chevron-left"></i>
+          </button>
+          
+          <button 
+            type="button"
+            className="hero-arrow-btn hero-arrow-right"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleNextHero();
+            }}
+            aria-label="Next Featured Movie"
+          >
+            <i className="bi bi-chevron-right"></i>
+          </button>
+
+          {/* Carousel Dots Indicator */}
+          <div className="hero-dots-container">
+            {movies.slice(0, 5).map((_, idx) => (
+              <span 
+                key={idx} 
+                className={`hero-dot ${idx === heroIndex ? 'active' : ''}`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setHeroIndex(idx);
+                }}
+              ></span>
+            ))}
+          </div>
         </div>
       )}
 
@@ -229,8 +303,8 @@ function Home({ watchlist, onToggleWatchlist }) {
             <input
               type="text"
               className="form-control custom-input w-100 ps-5"
-              placeholder="Search by title (e.g. Interstellar, Inception, Batman)..."
-              value={searchQuery}
+              placeholder="Search by title"
+           value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
@@ -308,9 +382,11 @@ function Home({ watchlist, onToggleWatchlist }) {
         </div>
 
         {/* Catalog Header */}
-        <h5 className="text-secondary fw-semibold mb-0">
-          {activeSearch ? `Search results for "${activeSearch}"` : 'Browse Catalog'}
-        </h5>
+        {activeSearch && (
+          <h5 className="text-secondary fw-semibold mb-0">
+            Search results for "{activeSearch}"
+          </h5>
+        )}
       </div>
 
       {/* Loading Spinner */}

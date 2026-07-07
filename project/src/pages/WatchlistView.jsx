@@ -7,19 +7,26 @@ function WatchlistView({ watchlist, onToggleWatchlist }) {
 
   return (
     <div className="animate-fade-in">
-      <h3 className="text-white mb-4 fw-bold d-flex align-items-center gap-2">
-        <i className="bi bi-bookmark-star-fill text-warning"></i> Saved Watchlist
-      </h3>
+      <div className="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4 pb-2 border-bottom border-secondary border-opacity-10">
+        <h3 className="text-white mb-0 fw-bold d-flex align-items-center gap-2">
+          <i className="bi bi-bookmark-star-fill text-warning" style={{ filter: 'drop-shadow(0 0 6px rgba(255, 215, 0, 0.4))' }}></i> Saved Watchlist
+        </h3>
+        <span className="badge-gold">
+          {watchlist.length} {watchlist.length === 1 ? 'Movie' : 'Movies'} Saved
+        </span>
+      </div>
 
       {watchlist.length === 0 ? (
-        <div className="glass-panel p-5 text-center my-4">
-          <i className="bi bi-bookmark-plus text-secondary d-block mb-3" style={{ fontSize: '3.5rem' }}></i>
-          <h5 className="text-secondary fw-semibold">Your watchlist is empty</h5>
-          <p className="text-muted small col-md-6 mx-auto mb-4">
-            Start exploring movies on the homepage and click the bookmark button or "Add Watchlist" to organize them here.
+        <div className="glass-panel p-5 text-center my-4 border border-secondary border-opacity-10 py-5">
+          <div className="empty-watchlist-icon-wrapper">
+            <i className="bi bi-bookmark-plus text-warning" style={{ fontSize: '3rem', filter: 'drop-shadow(0 0 12px rgba(255, 215, 0, 0.3))' }}></i>
+          </div>
+          <h4 className="text-white fw-bold mb-2">Your watchlist is empty</h4>
+          <p className="text-secondary small col-md-6 mx-auto mb-4">
+            Start exploring movies on the homepage. Click the bookmark icon on any card or "Add Watchlist" on the detail page to organize your ultimate collection here.
           </p>
-          <button className="btn btn-gold btn-sm px-4 py-2" onClick={() => navigate('/')}>
-            Explore Catalog
+          <button className="btn btn-gold px-4 py-2" onClick={() => navigate('/')}>
+            <i className="bi bi-compass-fill me-2"></i> Explore Catalog
           </button>
         </div>
       ) : (
